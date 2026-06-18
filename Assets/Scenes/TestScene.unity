@@ -623,10 +623,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f951ba9a91256ca4b9aa46f2c4e960d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
+  _invertX: 0
+  _invertY: 0
   _followngTarget: {fileID: 270065988}
   _targetDistance: 5
   _framingOffset: {x: 0, y: 1}
-  _mouseSensitivity: 0.5
+  _mouseSensitivity: 0.1
   _minVerticalAngle: -10
   _maxVerticalAngle: 45
 --- !u!1660057539 &9223372036854775807
