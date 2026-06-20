@@ -3,8 +3,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Move Settings")]
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _rotateSpeed = 500f;
+
+    private CharacterController _characterController;
 
     private InputAction _moveAction;
     private CameraController _cameraController;
@@ -18,6 +21,7 @@ public class PlayerController : MonoBehaviour
         _moveAction = InputSystem.actions.FindAction("Move");
         _cameraController = Camera.main.GetComponent<CameraController>();
         _animator = GetComponent<Animator>();
+        _characterController = GetComponent<CharacterController>();
     }
 
     private void Update()
@@ -27,7 +31,7 @@ public class PlayerController : MonoBehaviour
 
         if(moveActionVec.magnitude > 0)
         {
-            transform.position += moveDir * _moveSpeed * Time.deltaTime;
+            _characterController.Move(moveDir * _moveSpeed * Time.deltaTime);
             _targetRotation = Quaternion.LookRotation(moveDir);
         }
 
