@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         Vector2 moveActionVec = _moveAction.ReadValue<Vector2>();
-        Vector3 moveDir = _cameraController.PlanarRotation * new Vector3(moveActionVec.x, 0, moveActionVec.y).normalized;
+        Vector3 moveDir = _cameraController.PlanarRotation * new Vector3(moveActionVec.x, 0, moveActionVec.y);
 
         if(moveActionVec.magnitude > 0)
         {
