@@ -7,14 +7,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _rotateSpeed = 500f;
 
-    private CharacterController _characterController;
+    [Header("Gravity Setting")]
 
+    // Components
+    private CharacterController _characterController;
+    private Animator _animator;
     private InputAction _moveAction;
     private CameraController _cameraController;
 
+    // Properities
     private Quaternion _targetRotation;
-
-    private Animator _animator;
 
     private void Start()
     {

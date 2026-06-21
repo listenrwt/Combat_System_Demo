@@ -21,10 +21,10 @@ public class CameraController : MonoBehaviour
         && Gamepad.current.rightStick.ReadValue().magnitude > 0 ? _controllerSensitivity : _mouseSensitivity;
     [SerializeField] private float _minVerticalAngle = -10f;
     [SerializeField] private float _maxVerticalAngle = 45f;
-
     private float _rotationX = 0f;
     private float _rotationY = 0f;
 
+    // Components
     private InputAction _lookAction;
 
     private void Start()
