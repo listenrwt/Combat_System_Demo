@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,26 +16,34 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Vector2 _framingOffset = Vector2.zero;
 
     [Header("Target Rotation")]
-    [SerializeField] private float _mouseSensitivity = 1f;
+    [SerializeField] private float _mouseSensitivity = 0.1f;
+    [SerializeField] private float _controllerSensitivity = 1f;
+    private float Sensitivity => Gamepad.current != null
+        && Gamepad.current.rightStick.ReadValue().magnitude > 0 ? _controllerSensitivity : _mouseSensitivity;
     [SerializeField] private float _minVerticalAngle = -10f;
     [SerializeField] private float _maxVerticalAngle = 45f;
+
     private float _rotationX = 0f;
     private float _rotationY = 0f;
+
+    private InputAction _lookAction;
 
     private void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        _lookAction = InputSystem.actions.FindAction("Look");
     }
 
     private void Update()
     {
         // Get mouse rotations
+        Vector2 lookDelta = _lookAction.ReadValue<Vector2>();
         // vertical
-        _rotationX += Mouse.current.delta.y.ReadValue() * _mouseSensitivity * InvertXRotationVal; 
+        _rotationX += lookDelta.y * Sensitivity * InvertXRotationVal; 
         _rotationX = Mathf.Clamp(_rotationX, _minVerticalAngle, _maxVerticalAngle);
         // horizontal
-        _rotationY += Mouse.current.delta.x.ReadValue() * _mouseSensitivity * InvertYRotationVal;
+        _rotationY += lookDelta.x * Sensitivity * InvertYRotationVal;
         
         Quaternion targetRotation = Quaternion.Euler(_rotationX, _rotationY, 0);
 
