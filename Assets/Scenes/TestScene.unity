@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 184542748}
   - component: {fileID: 184542747}
   - component: {fileID: 184542746}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 725788704}
   - component: {fileID: 725788703}
   - component: {fileID: 725788702}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -504,6 +504,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   _moveSpeed: 10
   _rotateSpeed: 500
+  _gravityCheckerRadius: 0.2
+  _gravityCheckerOffset: {x: 0, y: 0.1, z: 0.08}
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!4 &901188271
 Transform:
   m_ObjectHideFlags: 0
@@ -513,7 +518,7 @@ Transform:
   m_GameObject: {fileID: 901188269}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 5.84, z: 5.94}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -564,9 +569,9 @@ CharacterController:
   m_Radius: 0.2
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.02
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1.03, z: 0.08}
+  m_Center: {x: 0, y: 1.07, z: 0.08}
 --- !u!1 &1919936489
 GameObject:
   m_ObjectHideFlags: 0
@@ -723,6 +728,7 @@ MonoBehaviour:
   _targetDistance: 5
   _framingOffset: {x: 0, y: 1}
   _mouseSensitivity: 0.1
+  _controllerSensitivity: 1
   _minVerticalAngle: -10
   _maxVerticalAngle: 45
 --- !u!1001 &1937597803
