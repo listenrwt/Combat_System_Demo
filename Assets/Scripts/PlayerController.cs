@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask _groundLayer;
     private Vector3 GravityCheckerPos => transform.TransformPoint(_gravityCheckerOffset);
     private bool IsGround => Physics.CheckSphere(GravityCheckerPos, _gravityCheckerRadius, _groundLayer);
-    private float _verticalVelocity = -0.55f;
+    private float _verticalVelocity = -0.5f;
     private const float DEFAULT_VERTIICAL_VELOCITY = -0.5f;
 
     // Components
