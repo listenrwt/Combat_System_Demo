@@ -15,14 +15,22 @@ public class MeleeFighter : MonoBehaviour
     {
         if (!InAction)
         {
-            StartCoroutine(Attack());
+            StartCoroutine(PerformAnimation("Slash"));
         }
     }
 
-    private IEnumerator Attack()
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Hitbox") && !InAction)
+        {
+            StartCoroutine(PerformAnimation("SwordImpact"));
+        }
+    }
+
+    private IEnumerator PerformAnimation(string animationName)
     {
         InAction = true;
-        _animator.CrossFade("Slash", 0.2f);
+        _animator.CrossFade(animationName, 0.2f);
 
         yield return null; // Wait 1 frame for layer transition
 
