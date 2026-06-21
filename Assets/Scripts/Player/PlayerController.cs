@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     private Animator _animator;
     private InputAction _moveAction;
     private CameraController _cameraController;
+    private MeleeFighter _meleeFighter;
 
     // Properities
     private Quaternion _targetRotation;
@@ -31,10 +32,17 @@ public class PlayerController : MonoBehaviour
         _cameraController = Camera.main.GetComponent<CameraController>();
         _animator = GetComponent<Animator>();
         _characterController = GetComponent<CharacterController>();
+        _meleeFighter = GetComponent<MeleeFighter>();
     }
 
     private void Update()
     {
+        if (_meleeFighter.InAction)
+        {
+            _animator.SetFloat("moveAmount", 0f);
+            return;
+        }
+
         // Moving Velocity
         Vector2 moveActionVec = _moveAction.ReadValue<Vector2>();
         Vector3 moveDir = _cameraController.PlanarRotation * new Vector3(moveActionVec.x, 0f, moveActionVec.y);
