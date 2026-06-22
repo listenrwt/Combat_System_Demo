@@ -8,6 +8,7 @@ public class PlayerSOData : ScriptableObject
     public float rotateSpeed = 500f;
     public float walkMultiplier = 0.2f;
     public float runMultiplier = 1f;
+    public float sprintMultiplier = 1.5f;
 
     [Header("Gravity Settings")]
     public float gravityCheckerRadius = 0.5f;
