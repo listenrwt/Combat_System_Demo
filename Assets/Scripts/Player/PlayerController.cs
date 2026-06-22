@@ -3,65 +3,66 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Move Settings")]
-    [SerializeField] private float _moveSpeed = 5f;
-    [SerializeField] private float _rotateSpeed = 500f;
+    [Header("Player Settings")]
+    [field: SerializeField] public PlayerSOData SOdata;
+    public PlayerData data;
 
-    [Header("Gravity Setting")]
-    [SerializeField] private float _gravityCheckerRadius = 0.5f;
-    [SerializeField] private Vector3 _gravityCheckerOffset = Vector3.zero;
-    [SerializeField] private LayerMask _groundLayer;
-    private Vector3 GravityCheckerPos => transform.TransformPoint(_gravityCheckerOffset);
-    private bool IsGround => Physics.CheckSphere(GravityCheckerPos, _gravityCheckerRadius, _groundLayer);
-    private float _verticalVelocity = -0.5f;
-    private const float DEFAULT_VERTIICAL_VELOCITY = -0.5f;
+    public CharacterController CharacterController { get; private set; }
+    public Animator Animator { get; private set; }
+    public CameraController CameraController { get; private set; }
 
-    // Components
-    private CharacterController _characterController;
-    private Animator _animator;
-    private InputAction _moveAction;
-    private CameraController _cameraController;
-    private MeleeFighter _meleeFighter;
+    // Input Actions
+    public InputAction MoveAction { get; private set; }
+    public InputAction AttackAction { get; private set; }
+    public InputAction WalkToggleAction { get; private set; }
+    public InputAction SprintAction { get; private set; }
 
-    // Properities
-    private Quaternion _targetRotation;
+    // State Machines
+    private PlayerMovementSM movementSM;
+    private PlayerCombatSM combatSM;
 
     private void Start()
     {
-        _moveAction = InputSystem.actions.FindAction("Move");
-        _cameraController = Camera.main.GetComponent<CameraController>();
-        _animator = GetComponent<Animator>();
-        _characterController = GetComponent<CharacterController>();
-        _meleeFighter = GetComponent<MeleeFighter>();
+        CharacterController = GetComponent<CharacterController>();
+        Animator = GetComponent<Animator>();
+        CameraController = Camera.main.GetComponent<CameraController>();
+
+        MoveAction = InputSystem.actions.FindAction("Move");
+        AttackAction = InputSystem.actions.FindAction("Attack");
+        WalkToggleAction = InputSystem.actions.FindAction("WalkToggle");
+        SprintAction = InputSystem.actions.FindAction("Sprint");
+
+        movementSM = new PlayerMovementSM(this);
+        combatSM = new PlayerCombatSM(this);
+
+        data = new PlayerData();
     }
 
     private void Update()
     {
-        if (_meleeFighter.InAction)
-        {
-            _animator.SetFloat("moveAmount", 0f);
-            return;
-        }
+        UpdateGroundCheck();
 
-        // Moving Velocity
-        Vector2 moveActionVec = _moveAction.ReadValue<Vector2>();
-        Vector3 moveDir = _cameraController.PlanarRotation * new Vector3(moveActionVec.x, 0f, moveActionVec.y);
+        movementSM.Update();
+        combatSM.Update();
+    }
 
-        // Falling Velocity
-        _verticalVelocity = IsGround ? DEFAULT_VERTIICAL_VELOCITY : _verticalVelocity + Physics.gravity.y * Time.deltaTime;
+    private void UpdateGroundCheck()
+    {
+        Vector3 checkerPos = transform.TransformPoint(SOdata.gravityCheckerOffset);
+        data.movementData.isGround = Physics.CheckSphere(checkerPos, SOdata.gravityCheckerRadius, SOdata.groundLayer);
 
-        Vector3 velocity = (moveDir * _moveSpeed + new Vector3(0f, _verticalVelocity, 0f)) * Time.deltaTime;
-        _characterController.Move(velocity);
-
-        if (moveActionVec.magnitude > 0) _targetRotation = Quaternion.LookRotation(moveDir); 
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, _targetRotation, _rotateSpeed * Time.deltaTime);
-
-        _animator.SetFloat("moveAmount", moveActionVec.magnitude, 0.2f, Time.deltaTime);
+        if (data.movementData.isGround)
+            data.movementData.verticalVelocity = -0.5f;
+        else
+            data.movementData.verticalVelocity += Physics.gravity.y * Time.deltaTime;
     }
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = IsGround ? new Color(0f, 1f, 0f, 0.5f) : new Color(1f, 0f, 0f, 0.5f);
-        Gizmos.DrawSphere(GravityCheckerPos, _gravityCheckerRadius);
+        if (SOdata == null) return;
+        Vector3 pos = transform.TransformPoint(SOdata.gravityCheckerOffset);
+        bool grounded = Physics.CheckSphere(pos, SOdata.gravityCheckerRadius, SOdata.groundLayer);
+        Gizmos.color = grounded ? new Color(0f, 1f, 0f, 0.5f) : new Color(1f, 0f, 0f, 0.5f);
+        Gizmos.DrawSphere(pos, SOdata.gravityCheckerRadius);
     }
 }
