@@ -26,7 +26,7 @@ public class PlayerGroundedState : IState
         if (player.data.combatData.isAttacking)
         {
             player.data.movementData.moveInput = Vector2.zero;
-            player.Animator.SetFloat("moveAmount", 0f);
+            player.Animator.SetFloat("moveAmount", 0f, 0.2f, Time.deltaTime);
             return;
         }
 

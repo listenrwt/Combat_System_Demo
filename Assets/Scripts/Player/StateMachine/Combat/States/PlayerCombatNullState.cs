@@ -17,6 +17,11 @@ public class PlayerCombatNullState : IState
     public void Update()
     {
         if (player.AttackAction.WasPressedThisFrame() && !player.data.combatData.isAttacking)
-            combatSM.ChangeState(combatSM.AttackState);
+        {
+            if (player.data.movementData.isSprinting)
+                combatSM.ChangeState(combatSM.HeavyAttackState);
+            else
+                combatSM.ChangeState(combatSM.AttackState);
+        }
     }
 }

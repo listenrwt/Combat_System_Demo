@@ -1,12 +1,12 @@
 using FSM;
 using UnityEngine;
 
-public class PlayerAttackState : IState
+public class PlayerLightAttackState : IState
 {
     private PlayerController player;
     private PlayerCombatSM combatSM;
 
-    public PlayerAttackState(PlayerController player, PlayerCombatSM combatSM)
+    public PlayerLightAttackState(PlayerController player, PlayerCombatSM combatSM)
     {
         this.player = player;
         this.combatSM = combatSM;
@@ -15,7 +15,7 @@ public class PlayerAttackState : IState
     public void Enter()
     {
         player.data.combatData.isAttacking = true;
-        player.Animator.SetFloat("moveAmount", 0f);
+        player.Animator.SetFloat("moveAmount", 0f, 0.2f, Time.deltaTime);
         player.Animator.CrossFade("Slash", 0.2f);
         player.data.combatData.attackTimer = -1f; // sentinel: wait one frame for transition
     }
