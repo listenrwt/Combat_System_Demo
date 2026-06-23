@@ -29,10 +29,9 @@ public class PlayerRunningState : PlayerNormalMovementState
         }
     }
 
-    protected override float GetMoveMultiplier(UnityEngine.Vector2 moveInput)
+    protected override float GetMoveMultiplier()
     {
         bool isGamepad = player.MoveAction.activeControl?.device is UnityEngine.InputSystem.Gamepad;
-        return isGamepad ?
-            1f : player.SOdata.runMultiplier;
+        return isGamepad ? 1f : player.SOdata.runMultiplier;
     }
 }

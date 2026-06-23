@@ -24,5 +24,5 @@ public class PlayerIdleState : PlayerNormalMovementState
         }
     }
 
-    protected override float GetMoveMultiplier(UnityEngine.Vector2 moveInput) => 0f;
+    protected override float GetMoveMultiplier() => 0f;
 }

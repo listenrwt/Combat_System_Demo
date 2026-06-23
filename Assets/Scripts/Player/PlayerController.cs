@@ -41,10 +41,71 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         UpdateGroundCheck();
-
         movementSM.Update();
         combatSM.Update();
     }
+
+    // ── Movement API for states ─────────────────────────────────────────────
+
+    /// <summary>
+    /// Read input toggles (walk/sprint). Call once per grounded Update before Move.
+    /// </summary>
+    public void UpdateMovementToggles()
+    {
+        bool isGamepad = MoveAction.activeControl?.device is Gamepad;
+
+        if (isGamepad)
+        {
+            data.movementData.enableRunning = false;
+        }
+        else
+        {
+            if (WalkToggleAction.triggered)
+                data.movementData.enableRunning = !data.movementData.enableRunning;
+
+            if (SprintAction.triggered)
+                data.movementData.isSprinting = !data.movementData.isSprinting;
+        }
+    }
+
+    /// <summary>
+    /// Apply movement for this frame.
+    /// </summary>
+    /// <param name="multiplier">Speed multiplier supplied by the current state.</param>
+    /// <param name="normalize">Whether to normalize the move direction (e.g. for sprint).</param>
+    public void Move(float multiplier, bool normalize)
+    {
+        if (data.combatData.isAttacking)
+        {
+            data.movementData.moveInput = Vector2.zero;
+            Animator.SetFloat("moveAmount", 0f, 0.2f, Time.deltaTime);
+            return;
+        }
+
+        Vector2 moveInput = data.movementData.moveInput = MoveAction.ReadValue<Vector2>();
+
+        Vector3 moveDir = CameraController.PlanarRotation * new Vector3(moveInput.x, 0f, moveInput.y);
+        if (normalize)
+            moveDir = moveDir.normalized;
+
+        Vector3 velocity = (moveDir * SOdata.moveSpeed * multiplier
+                           + new Vector3(0f, data.movementData.verticalVelocity, 0f))
+                           * Time.deltaTime;
+        CharacterController.Move(velocity);
+
+        if (moveInput.magnitude > 0f)
+            data.movementData.targetRotation = Quaternion.LookRotation(moveDir);
+
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation,
+            data.movementData.targetRotation,
+            SOdata.rotateSpeed * Time.deltaTime);
+
+        float animAmount = normalize ? multiplier : moveInput.magnitude * multiplier;
+        Animator.SetFloat("moveAmount", animAmount, 0.2f, Time.deltaTime);
+    }
+
+    // ── Private helpers ─────────────────────────────────────────────────────
 
     private void UpdateGroundCheck()
     {
