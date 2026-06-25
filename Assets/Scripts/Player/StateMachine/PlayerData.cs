@@ -11,8 +11,9 @@ public class PlayerMovementData
     public float verticalVelocity = -0.5f;
     public bool isGround;
     public Quaternion targetRotation;
-    public bool enableRunning = false;
+    public bool isRunningToggled = false;
     public bool isSprinting = false;
+    public float stoppingTimer = 0f;
 }
 
 public class PlayerCombatData

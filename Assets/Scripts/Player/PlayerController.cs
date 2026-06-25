@@ -56,16 +56,16 @@ public class PlayerController : MonoBehaviour
 
         if (isGamepad)
         {
-            data.movementData.enableRunning = false;
+            data.movementData.isRunningToggled = false;
         }
         else
         {
             if (WalkToggleAction.triggered)
-                data.movementData.enableRunning = !data.movementData.enableRunning;
-
-            if (SprintAction.triggered)
-                data.movementData.isSprinting = !data.movementData.isSprinting;
+                data.movementData.isRunningToggled = !data.movementData.isRunningToggled;
         }
+
+        if (SprintAction.triggered)
+            data.movementData.isSprinting = !data.movementData.isSprinting && data.movementData.moveInput.magnitude > 0f;
     }
 
     /// <summary>

@@ -1,7 +1,7 @@
 using FSM;
 using UnityEngine;
 
-public class PlayerGroundedState : IState
+public abstract class PlayerGroundedState : IState
 {
     protected PlayerController player;
     protected PlayerMovementSM movementSM;
